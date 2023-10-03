@@ -1,8 +1,8 @@
-import { useSnapshot } from "valtio";
-import { boardState, clearBoard, toggleRun } from "../state";
 import { Pause, Play } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useSnapshot } from "valtio";
 import constants from "../constants";
+import { boardState, clearBoard, toggleRun } from "../state";
 
 export function ConfigBar() {
   const clear = () => {
@@ -26,6 +26,20 @@ export function ConfigBar() {
 
 const PlayPause = () => {
   const boardSnap = useSnapshot(boardState);
+
+  const spaceHandler = (e: KeyboardEvent) => {
+    if (e.key === " ") {
+      toggleRun();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keypress", spaceHandler);
+
+    return () => {
+      window.removeEventListener("keypress", spaceHandler);
+    };
+  }, []);
 
   return (
     <button
